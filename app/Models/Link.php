@@ -10,7 +10,9 @@ class Link extends Model
 {
     use HasFactory;
 
-    protected $attributes = [
+    protected $guarded = ['is_active'];
+
+    protected $casts = [
         'is_active' => 'boolean',
     ];
 

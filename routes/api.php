@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\LinkController;
+use App\Http\Middleware\ServiceKeyChecker;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('links/{slug}/stats', [LinkController::class, 'stats']);
+Route::post('links', [LinkController::class, 'store'])->middleware(['throttle:30', ServiceKeyChecker::class]);
+Route::patch('links/{slug}/disable', [LinkController::class, 'disable']);
