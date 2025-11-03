@@ -16,7 +16,7 @@ class SlugRule implements ValidationRule
     {
         $slugRegexpMask = '/^[A-Za-z0-9_-]+$/';
         if (preg_match($slugRegexpMask, $value) !== 1) {
-            $fail('Wrong slug format');
+            $fail('Wrong slug format.');
         }
     }
 }

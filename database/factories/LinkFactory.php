@@ -16,8 +16,9 @@ class LinkFactory extends Factory
      */
     public function definition(): array
     {
+//        dd($this->faker->slug(), $this->faker->url());
         return [
-            'slug' => $this->faker->unique()->slug(),
+            'slug' => $this->faker->slug(),
             'target_url' => $this->faker->url(),
             'is_active' => true,
         ];

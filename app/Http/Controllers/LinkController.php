@@ -38,7 +38,7 @@ class LinkController extends Controller
     {
         $link = Link::where('slug', $slug)->firstOrFail();
 
-        if ($link->is_active) {
+        if (!$link->is_active) {
             abort(Response::HTTP_GONE);
         }
 

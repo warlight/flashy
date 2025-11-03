@@ -24,7 +24,7 @@ class LinkStoreRequest extends FormRequest
     {
         return [
             'slug' => ['sometimes', ' string', ' unique:links', 'min:5', ' max:100', new SlugRule],
-            'target_url' => 'required', 'string', 'url',
+            'target_url' => ['required', 'string', 'url'],
         ];
     }
 }
