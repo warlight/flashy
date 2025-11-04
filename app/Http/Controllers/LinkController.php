@@ -25,7 +25,7 @@ class LinkController extends Controller
         return response()->json(['link' => route('link.redirect', $slug)], 201);
     }
 
-    public function stats(string $slug, Request $request)
+    public function stats(string $slug)
     {
         // try to get cache:
         $cache = Cache::get('cached_stat_' . $slug);
