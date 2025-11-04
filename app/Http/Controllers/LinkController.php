@@ -22,7 +22,7 @@ class LinkController extends Controller
             'target_url' => $request->target_url,
         ]);
 
-        return response()->json(['slug' => $slug], 201);
+        return response()->json(['link' => route('link.redirect', $slug)], 201);
     }
 
     public function stats(string $slug)

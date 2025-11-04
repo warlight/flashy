@@ -3,11 +3,10 @@
 namespace Tests\Feature;
 
 use App\Jobs\LogLinkHitJob;
+use App\Models\BotUserAgent;
 use App\Models\Link;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
@@ -46,5 +45,22 @@ class LinkRedirectTest extends TestCase
         ]);
         $response = $this->get('/r/' . $link->slug);
         $response->assertStatus(410);
+    }
+
+    public function testRedirectLinkByBot()
+    {
+        Queue::fake();
+
+        $botRecord = BotUserAgent::factory()->create();
+
+        $link = Link::factory()->create();
+        $response = $this->withHeaders([
+            'User-Agent' => $this->faker->shuffleString() . $botRecord->bot_user_agent_part . $this->faker->shuffleString()
+        ])
+            ->get('/r/' . $link->slug);
+        $response->assertStatus(302);
+        $response->assertRedirect($link->target_url);
+
+        Queue::assertNothingPushed();
     }
 }

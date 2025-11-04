@@ -28,7 +28,7 @@ class LinkCreationTest extends TestCase
         ])->postJson('/api/links', $requestBody);
         $response->assertStatus(201);
         $jsonResponse = json_decode($response->getContent(), true);
-        $this->assertEquals($link->slug, $jsonResponse['slug']);
+        $this->assertEquals(route('link.redirect', $link->slug), $jsonResponse['link']);
     }
 
     public function testCreationBadServiceKey()
@@ -48,7 +48,7 @@ class LinkCreationTest extends TestCase
         ])->postJson('/api/links', $requestBody);
         $response->assertStatus(201);
         $jsonResponse = json_decode($response->getContent(), true);
-        $this->assertNotEmpty($jsonResponse['slug']);
+        $this->assertNotEmpty($jsonResponse['link']);
     }
 
     public static function creationValidationCases(): array

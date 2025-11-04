@@ -18,4 +18,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('r/{slug}', [LinkController::class, 'redirect']);
+Route::get('r/{slug}', [LinkController::class, 'redirect'])->name('link.redirect');
