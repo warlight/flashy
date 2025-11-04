@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminPanelController;
 use App\Http\Controllers\AuthenticatedSessionController;
 use App\Http\Controllers\LinkController;
 use Illuminate\Support\Facades\Route;
@@ -27,7 +28,7 @@ Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
 
 Route::middleware('auth')->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('admin/links', [AdminPanelController::class, 'dashboard'])->name('dashboard');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
