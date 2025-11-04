@@ -31,12 +31,19 @@ class LinkController extends Controller
         if ($cache) {
             return response()->json(['data' => $cache]);
         }
-        $link = Link::where('slug', $slug)->firstOrFail();
 
-        $data = $link->loadCount('linkHits as totalHits')
-            ->load(['linkHits' => function ($query) {
-                $query->limit(5);
-            }]);
+        $link = Link::where('slug', $slug)
+            ->withCount('linkHits as total_hits')
+            ->with(['linkHits' => function ($query) {
+                $query->orderByDesc('created_at')->limit(5);
+            }])
+            ->firstOrFail();
+
+        $data = [
+            'total_hits' => $link->total_hits,
+            'target_url' => $link->target_url,
+            'last_hits' => $link->linkHits->map->only('created_at', 'ip')
+        ];
 
         Cache::put(['cached_stat_' . $slug => $data], now()->addSeconds(60));
 
