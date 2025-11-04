@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LinkStoreRequest;
 use App\Jobs\LogLinkHitJob;
+use App\Models\BotUserAgent;
 use App\Models\Link;
 use App\Services\SlugGeneratorService;
 use Illuminate\Http\Request;
@@ -58,7 +59,11 @@ class LinkController extends Controller
             abort(Response::HTTP_GONE);
         }
 
-        LogLinkHitJob::dispatch($link, $request->ip(), $request->userAgent());
+        $userAgent = $request->userAgent() ?? '';
+        // check for bot scrapping
+        if (BotUserAgent::whereRaw('? LIKE CONCAT("%", bot_user_agent_part, "%")', [strtolower($userAgent)])->doesntExist()) {
+            LogLinkHitJob::dispatch($link, $request->ip(), $userAgent);
+        }
 
         return redirect($link->target_url);
     }

@@ -1,8 +1,6 @@
 <?php
 
 use App\Http\Controllers\LinkController;
-use App\Http\Middleware\DebugProfiler;
-use App\Http\Middleware\ServiceKeyChecker;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('links/{slug}/stats', [LinkController::class, 'stats'])->middleware(DebugProfiler::class);
-Route::post('links', [LinkController::class, 'store'])->middleware(['throttle:30', ServiceKeyChecker::class]);
+Route::get('links/{slug}/stats', [LinkController::class, 'stats'])->middleware('debug');
+Route::post('links', [LinkController::class, 'store'])->middleware(['throttle:30', 'service_key_checker']);
 Route::patch('links/{slug}/disable', [LinkController::class, 'disable']);
