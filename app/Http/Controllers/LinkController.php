@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LinkStoreRequest;
+use App\Jobs\LogLinkHitJob;
 use App\Models\Link;
 use App\Services\SlugGeneratorService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class LinkController extends Controller
@@ -24,12 +26,19 @@ class LinkController extends Controller
 
     public function stats(string $slug)
     {
+        // try to get cache:
+        $cache = Cache::get('cached_stat_' . $slug);
+        if ($cache) {
+            return response()->json(['data' => $cache]);
+        }
         $link = Link::where('slug', $slug)->firstOrFail();
 
         $data = $link->loadCount('linkHits as totalHits')
             ->load(['linkHits' => function ($query) {
                 $query->limit(5);
             }]);
+
+        Cache::put(['cached_stat_' . $slug => $data], now()->addSeconds(60));
 
         return response()->json(['data' => $data]);
     }
@@ -42,7 +51,8 @@ class LinkController extends Controller
             abort(Response::HTTP_GONE);
         }
 
-        // fire job to log agent and IP from request
+        LogLinkHitJob::dispatch($link, $request->ip(), $request->userAgent());
+
         return redirect($link->target_url);
     }
 

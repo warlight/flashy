@@ -10,6 +10,10 @@ class LinkHit extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
+    public const UPDATED_AT = null;
+
     public function link(): BelongsTo
     {
         return $this->belongsTo(Link::class);
