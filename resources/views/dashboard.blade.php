@@ -25,7 +25,7 @@
                                 <th>Target URL</th>
                                 <th>Slug</th>
                                 <th>Hits</th>
-                                <th>Temporary stats link</th>
+                                <th>Stats link</th>
                             </tr>
                             </thead>
                             <tbody>
