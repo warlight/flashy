@@ -30,11 +30,11 @@
                             </thead>
                             <tbody>
                             @foreach($links ?? [] as $link)
-                                <tr class="dark:text-white">
+                                <tr class="dark:text-white" x-data="{ val: @js($link->signed_link), copied: false }">
                                     <td>{{ $link->target_url }}</td>
-                                    <td>{{ $link->slug }}</td>
-                                    <td>{{ $link->hitsCount }}</td>
-                                    <td></td>
+                                    <td >{{ $link->slug }}</td>
+                                    <td class="text-center">{{ $link->hitsCount }}</td>
+                                    <td class="text-center"><x-copy-button/></td>
                                 </tr>
                             @endforeach
                             </tbody>
